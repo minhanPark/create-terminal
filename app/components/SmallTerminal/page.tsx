@@ -32,7 +32,11 @@ export default function SmallTerminal() {
       <div
         className="bg-red-300 grow"
         onPointerDownCapture={(e) => e.stopPropagation()}
-      ></div>
+      >
+        {/* 정해진 크기에 줄바꿈이 되도록 하려면 textarea를 사용해서 입력칸을
+        만들어야 한다. */}
+        <textarea className="border-none bg-transparent outline-none resize-none overflow-hidden" />
+      </div>
     </motion.div>
   );
 }
