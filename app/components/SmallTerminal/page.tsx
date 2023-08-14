@@ -10,6 +10,7 @@ import { VscBlank } from "react-icons/vsc";
 
 export default function SmallTerminal() {
   const [isHovered, setIsHovered] = useState(false);
+  const [pwd, setPwd] = useState("Runnungwater@runningwater ~: ");
   return (
     <motion.div
       style={{ width: "500px", height: "500px" }}
@@ -50,7 +51,13 @@ export default function SmallTerminal() {
       >
         {/* 정해진 크기에 줄바꿈이 되도록 하려면 textarea를 사용해서 입력칸을
         만들어야 한다. */}
-        <textarea className="border-none bg-transparent outline-none resize-none overflow-hidden" />
+        {/* 현재 위치 pwd를 계산해서 길이보다 적어지면 value가 바뀌지 않도록 해서 앞
+        부분 value를 남기도록 하자 */}
+        <textarea
+          className="border-none bg-transparent outline-none resize-none overflow-hidden w-full"
+          value={pwd}
+          onChange={(e) => setPwd(e.target.value)}
+        />
       </div>
     </motion.div>
   );
