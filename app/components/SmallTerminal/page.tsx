@@ -8,7 +8,11 @@ import { AiOutlineExpandAlt } from "react-icons/ai";
 import { IconContext } from "react-icons";
 import { VscBlank } from "react-icons/vsc";
 
-export default function SmallTerminal() {
+interface Props {
+  changeTerminal: (state: "Icon" | "Small" | "Large") => void;
+}
+
+export default function SmallTerminal({ changeTerminal }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const [pwd, setPwd] = useState("Runnungwater@runningwater ~: ");
   return (
@@ -17,6 +21,7 @@ export default function SmallTerminal() {
       className="flex flex-col"
       drag
       dragMomentum={false}
+      layoutId="terminal"
     >
       <div style={{ backgroundColor: "#dfe6e9", height: "25px" }}>
         <div
@@ -28,7 +33,11 @@ export default function SmallTerminal() {
             className="bg-red-600 inline-block rounded-full"
             onPointerDownCapture={(e) => e.stopPropagation()}
           >
-            {isHovered ? <IoCloseSharp /> : <VscBlank />}
+            {isHovered ? (
+              <IoCloseSharp onClick={() => changeTerminal("Icon")} />
+            ) : (
+              <VscBlank />
+            )}
             {/* 크기를 유지해주는 blank icon이 있어서 hover 시 바꿔주면 될듯하다 */}
           </div>
           <div
