@@ -7,14 +7,35 @@ import { BiMinus } from "react-icons/bi";
 import { AiOutlineExpandAlt } from "react-icons/ai";
 import { IconContext } from "react-icons";
 import { VscBlank } from "react-icons/vsc";
+import { useForm, Controller } from "react-hook-form";
 
 interface Props {
   changeTerminal: (state: "Icon" | "Small" | "Large") => void;
 }
 
+interface FormValus {
+  command: string;
+}
+
 export default function SmallTerminal({ changeTerminal }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const [pwd, setPwd] = useState("Runnungwater@runningwater ~: ");
+  const { handleSubmit, control, getValues, watch } = useForm({
+    defaultValues: {
+      command: "Runnungwater@runningwater ~: ",
+    },
+  });
+  const onValid = (data: { command: string }) => {
+    console.log(data);
+  };
+  // textarea에서는 아래처럼 해야 엔터를 눌렀을 때  폼이 제출됨
+  const handleKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit(onValid)();
+    }
+  };
+
   return (
     <motion.div
       style={{ width: "500px", height: "500px" }}
@@ -62,11 +83,25 @@ export default function SmallTerminal({ changeTerminal }: Props) {
         만들어야 한다. */}
         {/* 현재 위치 pwd를 계산해서 길이보다 적어지면 value가 바뀌지 않도록 해서 앞
         부분 value를 남기도록 하자 */}
-        <textarea
-          className="border-none bg-transparent outline-none resize-none overflow-hidden w-full"
-          value={pwd}
-          onChange={(e) => setPwd(e.target.value)}
-        />
+        {/* textarea에서는 엔터를 눌러도 폼이 제출되지 않음 그래서 해당키에 이벤트를 걸어줘야함 */}
+        <form onSubmit={handleSubmit(onValid)}>
+          <Controller
+            name="command"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <textarea
+                className="border-none bg-transparent outline-none resize-none overflow-hidden w-full"
+                value={value}
+                onChange={(e) => {
+                  // 길이가 아니라 텍스트 전체가 같은지 비교
+                  if (e.target.value.length <= pwd.length) return;
+                  onChange(e);
+                }}
+                onKeyDown={handleKeyDown}
+              />
+            )}
+          />
+        </form>
       </div>
     </motion.div>
   );
